@@ -1,0 +1,45 @@
+# Local environment files and credentials. Keep the documented templates.
+.env
+.env.*
+!.env.example
+!.env.*.example
+.secrets/
+*.pem
+*.key
+service-account*.json
+credentials*.json
+
+# Python environments, caches, build output, and test artifacts.
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Frontend dependencies and generated build output.
+node_modules/
+frontend/dist/
+.vite/
+
+# Persistent local databases, vector stores, uploads, and logs.
+backend/chroma_data/
+chroma_data/
+*.sqlite*
+*.db*
+backend/uploads/
+uploads/
+*.log
+
+# Local editor and operating-system files.
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
