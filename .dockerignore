@@ -1,0 +1,17 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.venv
+backend/__pycache__
+backend/.pytest_cache
+backend/chroma_data
+backend/uploads
+frontend/node_modules
+frontend/dist
+frontend/.vite
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache

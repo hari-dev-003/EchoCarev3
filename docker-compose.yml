@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    environment:
+      ENV: production
+      DB_BACKEND: atlas
+      CHROMA_DIR: /data/chroma
+      SERVE_FRONTEND: "false"
+    expose:
+      - "8000"
+    volumes:
+      - echocare_chroma:/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          response = urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=5);
+          raise SystemExit(0 if response.status == 200 else 1)
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  echocare_chroma:

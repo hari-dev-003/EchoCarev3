@@ -68,6 +68,28 @@ Chroma stores vectors in `CHROMA_DIR`. MongoDB is the source of truth: if the fo
 
 **Docker (optional):** from the project root `docker build -f backend/Dockerfile -t echocare .` then `docker run -p 8000:8000 --env-file backend/.env -v echocare_data:/data echocare` (Dockerfile includes Tesseract).
 
+**Single-VM Docker Compose deployment:** the repository includes `docker-compose.yml`, which runs Nginx/React on port 80 and FastAPI on a private container network. MongoDB remains MongoDB Atlas, while ChromaDB is stored in the named `echocare_chroma` volume.
+
+```bash
+# On the VM, from the repository root
+cp backend/.env.example backend/.env
+# Edit backend/.env:
+# ENV=production
+# DB_BACKEND=atlas
+# MONGODB_URI=<MongoDB Atlas connection string>
+# SECRET_KEY=<unique long random value>
+# FRONTEND_URL=http://<vm-public-ip-or-domain>
+# CHROMA_DIR=/data/chroma
+
+docker compose up -d --build
+docker compose ps
+docker compose logs -f backend
+```
+
+Open `http://<vm-public-ip-or-domain>/`. The frontend proxies `/api/*` to FastAPI, so no public backend port or `VITE_API_URL` is needed. Allow inbound TCP port 80 in the VM firewall/security group. The Compose volume persists ChromaDB data across container recreation; MongoDB Atlas persists application records.
+
+For HTTPS, put a TLS reverse proxy such as Caddy or Traefik in front of this stack, then set `FRONTEND_URL` to the final `https://` origin and recreate the backend container. Never commit `backend/.env`; rotate any credential that has been exposed.
+
 ## 6. What needs real configuration (honest limits)
 
 - **OTP e-mail:** without SMTP, development mode returns the OTP in the API response (never in production). Configure `SMTP_*` for real delivery.
