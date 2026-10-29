@@ -12,10 +12,10 @@ PyJWT==2.15.1
 chromadb==1.5.9
 google-genai==2.31.0
 tavily-python==0.8.5
-scikit-learn==1.9.1
-numpy==2.5.4
-joblib==1.6.0
-pandas==3.0.6
+scikit-learn==1.6.1
+numpy==2.2.6
+joblib==1.4.2
+pandas==2.2.3
 openpyxl==3.1.5
 reportlab==5.0.1
 qrcode[pil]==8.2
