@@ -57,7 +57,8 @@ async def register(body: RegisterIn):
 @router.post("/login")
 async def login(body: LoginIn):
     u = await get_db().users.find_one({"email": body.email.lower()})
-    if not u or not verify_password(body.password, u["password_hash"]):
+    password_hash = u.get("password_hash") if u else None
+    if not isinstance(password_hash, str) or not verify_password(body.password, password_hash):
         raise HTTPException(401, "Incorrect email or password")
     await audit(u, "login")
     try:
